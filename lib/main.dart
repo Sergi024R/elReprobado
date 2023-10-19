@@ -1,3 +1,4 @@
+import 'package:el_reprobado/config/theme/app_theme.dart';
 import 'package:el_reprobado/presentation/chat/chat_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -12,9 +13,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme(selectdColor: 1).theme(),
       home: const ChatScreen(),
     );
   }
