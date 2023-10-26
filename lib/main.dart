@@ -1,5 +1,5 @@
 import 'package:el_reprobado/config/theme/app_theme.dart';
-import 'package:el_reprobado/presentation/chat/chat_screen.dart';
+import 'package:el_reprobado/presentation/screens/chat/chat_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
