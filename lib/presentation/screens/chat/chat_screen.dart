@@ -1,50 +1,52 @@
-import 'package:el_reprobado/presentation/widgets/her_message_bubble.dart';
-import 'package:el_reprobado/presentation/widgets/my_message_bubble.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:yes_no_ejemplo/domain/dtos/message.dart';
+import 'package:yes_no_ejemplo/presentation/providers/chats/chat_provider.dart';
+import 'package:yes_no_ejemplo/presentation/widgets/chat/message_bubble.dart';
+import 'package:yes_no_ejemplo/presentation/widgets/shared/message_field_box.dart';
+import 'package:yes_no_ejemplo/presentation/widgets/herBar/her_presentation.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: const Padding(
-          padding: EdgeInsets.all(4.0),
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(
-                'https://www.jornada.com.mx/ultimas/2023/07/15/lionel-messi-firma-contrato-con-inter-de-miami-hasta-2025-2633.html/lionel-messi.jpg-9448.html/image_large?bc=2023-07-15T14:52:16-05:00'),
-          ),
-        ),
-        title: const Text("Messi"),
-        centerTitle:
-            false, //si usas android para centrarlo se utiliza esta instruccion
+    return const Scaffold(
+      appBar: HerPresentation(
+        nombre: 'Messi',
+        urlAvatar:
+            'https://fcb-abj-pre.s3.amazonaws.com/img/jugadors/MESSI.jpg',
       ),
-      body: _ChatView(),
+      body: ChatView(),
     );
   }
 }
 
-class _ChatView extends StatelessWidget {
+class ChatView extends StatelessWidget {
+  const ChatView({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final chatProvider = context.watch<ChatProvider>();
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
             Expanded(
-                child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return index % 2 == 0
-                    ? const HerMessageBubble()
-                    : const MyMessageBubble();
-                  },
-                ),
+              child: ListView.builder(
+                controller: chatProvider.chatScrollController,
+                itemCount: chatProvider.messageList.length,
+                itemBuilder: (context, index) {
+                  final message = chatProvider.messageList[index];
+                  return (message.fromWho == FromWho.hers)
+                      ? HerMessageBubble(
+                          message: message.text, urlGif: message.imageUrl)
+                      : MyMessageBubble(message: message.text);
+                },
+              ),
             ),
-            const Text('Sergio'),
-            const Text('Reyes')
+            MessageFieldBox(onValue: chatProvider.sendMessage),
           ],
         ),
       ),
